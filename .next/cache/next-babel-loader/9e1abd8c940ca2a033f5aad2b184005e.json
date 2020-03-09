@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { SET_BRANCH_APP, PUT_BRANCH_APP } from './types';\nexport function setBranchApp(data) {\n  return {\n    type: SET_BRANCH_APP,\n    payload: data\n  };\n}\nexport function putBranchApp(data) {\n  return {\n    type: PUT_BRANCH_APP,\n    meta: data\n  };\n}","map":null,"metadata":{},"sourceType":"module"}

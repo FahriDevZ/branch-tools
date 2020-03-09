@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { SET_SESSION } from './types'; // eslint-disable-next-line import/prefer-default-export\n\nexport function setSession(session) {\n  return {\n    type: SET_SESSION,\n    payload: session\n  };\n}","map":null,"metadata":{},"sourceType":"module"}

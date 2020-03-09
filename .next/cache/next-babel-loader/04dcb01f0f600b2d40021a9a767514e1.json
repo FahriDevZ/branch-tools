@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { SET_APP_CONFIG, PUT_APP_CONFIG } from './types';\nexport function setAppConfig(appConfig) {\n  return {\n    type: SET_APP_CONFIG,\n    payload: appConfig\n  };\n}\nexport function putAppConfig(appConfig) {\n  return {\n    type: PUT_APP_CONFIG,\n    meta: appConfig\n  };\n}","map":null,"metadata":{},"sourceType":"module"}
