@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { SET_SHARE_LINK, PUT_SHARE_LINK } from './types';\nexport function setShareLink(session) {\n  return {\n    type: SET_SHARE_LINK,\n    payload: session\n  };\n}\nexport function putShareLink(data) {\n  return {\n    type: PUT_SHARE_LINK,\n    meta: data\n  };\n}","map":null,"metadata":{},"sourceType":"module"}

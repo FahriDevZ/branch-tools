@@ -42,17 +42,13 @@ export const SET_BRANCH_APP = '@BranchApp/SET';
 
 export const PUT_BRANCH_APP = '@BranchApp/PUT';
 
-interface BranchApp {
+export interface BranchAppState {
   userId: string;
   userEmail: string;
   redirectLink: string;
   ogTitle?: string;
   ogImageUrl?: string;
   ogDescription?: string;
-}
-
-export interface BranchAppState extends BranchApp {
-  resultLink?: string;
 }
 
 export interface SetBranchApp {
@@ -66,3 +62,30 @@ export interface PutBranchApp {
 }
 
 export type BranchAppActionTypes = SetBranchApp | PutBranchApp;
+
+export const SET_SHARE_LINK = '@ShareLink/SET';
+
+export const PUT_SHARE_LINK = '@ShareLink/PUT';
+
+export interface ShareLinkApp {
+  id: number;
+  name: string;
+}
+
+export interface ShareLinkState {
+  app?: ShareLinkApp;
+  appLink: string;
+  originalLink: string;
+}
+
+export interface SetShareLink {
+  type: typeof SET_SHARE_LINK;
+  payload: ShareLinkState;
+}
+
+export interface PutShareLink {
+  type: typeof PUT_SHARE_LINK;
+  meta: Partial<ShareLinkState>;
+}
+
+export type ShareLinkActionTypes = SetShareLink | PutShareLink;

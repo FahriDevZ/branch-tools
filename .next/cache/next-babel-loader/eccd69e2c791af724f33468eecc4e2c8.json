@@ -1,1 +1,0 @@
-{"ast":null,"code":"export var SET_APP_CONFIG = '@AppConfig/SET';\nexport var PUT_APP_CONFIG = '@AppCongig/PUT';\nexport var SET_SESSION = '@Session/SET';\nexport var SET_BRANCH_APP = '@BranchApp/SET';\nexport var PUT_BRANCH_APP = '@BranchApp/PUT';","map":null,"metadata":{},"sourceType":"module"}

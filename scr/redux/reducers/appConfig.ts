@@ -10,20 +10,6 @@ export const initialStateAppConfig: AppConfigState = {
   name: 'Hello World',
 };
 
-// export function appConfigReducer(
-//   state = initialStateAppConfig,
-//   action: AppConfigActionTypes,
-// ): AppConfigState {
-//   switch (action.type) {
-//     case SET_APP_CONFIG:
-//       return action.payload;
-//     case PUT_APP_CONFIG:
-//       return { ...state, [action.meta.key]: action.meta.value };
-//     default:
-//       return state;
-//   }
-// }
-
 const reducer: Reducer<AppConfigState, AppConfigActionTypes> = (
   state = initialStateAppConfig,
   action,

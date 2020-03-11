@@ -15,10 +15,12 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import NativeSelect from '@material-ui/core/NativeSelect';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../scr/redux/reducers';
-import { BranchAppState } from '../scr/redux/actions/types';
+import { BranchAppState, ShareLinkApp } from '../scr/redux/actions/types';
 import { putBranchApp } from '../scr/redux/actions/branchApp';
+import { putShareLink } from '../scr/redux/actions/shareLink';
 import { makeStyles } from '@material-ui/core/styles';
 import { PageTheme } from '../scr/utils/types';
 import requestApi from '../scr/requestApi';
@@ -28,12 +30,14 @@ interface ReduxState {
   appConfig: RootState['appConfig'];
   branchApp: RootState['branchApp'];
   session: RootState['session'];
+  shareLink: RootState['shareLink'];
 }
 
 const mapState = (state: ReduxState) => ({
   appConfig: state.appConfig,
   branchApp: state.branchApp,
   session: state.session,
+  shareLink: state.shareLink,
 });
 
 const connector = connect(mapState);
@@ -53,27 +57,69 @@ const useStyles = makeStyles(theme => ({
   input: {
     paddingLeft: theme.spacing(2),
   },
+  selectInputNative: {
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    fontSize: 16,
+    transition: theme.transitions.create(['border-color', 'box-shadow']),
+  },
 }));
+
+const FacebookAppCollections: ShareLinkApp[] = [
+  { id: 200368456664008, name: 'We Heart It' },
+  { id: 87741124305, name: 'Youtube' },
+  { id: 166222643790489, name: 'Metacafe' },
+  { id: 462754987849668, name: 'Flickr.com' },
+  { id: 187960271237149, name: 'Detik.com' },
+  { id: 160621007401976, name: 'Liputan6.com' },
+  { id: 324557847592228, name: 'Kompas.com' },
+  { id: 332404380172618, name: 'Tempo.co' },
+];
 
 const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
   appConfig,
   branchApp,
   session,
+  shareLink,
   dispatch,
 }) => {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
-  const [resultLink, setResultLink] = React.useState('');
+  const [resultLink, setResultLink] = React.useState(shareLink.originalLink || '');
+  const [selectedApp, setSelectedApp] = React.useState(0);
 
   const refResultLink: React.RefObject<HTMLTextAreaElement> = React.createRef();
+  const ElementListApp: any[] = [];
+
+  FacebookAppCollections.forEach((item, key) => {
+    ElementListApp.push(
+      <option value={key} key={ElementListApp.length}>
+        {item.name}
+      </option>,
+    );
+  });
 
   const handleChangeBranchApp = (key: keyof BranchAppState, value: any) => {
     dispatch(putBranchApp({ [key]: value }));
   };
 
   React.useEffect(() => {
-    dispatch(putBranchApp({ resultLink }));
-  }, [dispatch, resultLink]);
+    const app = FacebookAppCollections[selectedApp];
+    if (app !== undefined) {
+      if (resultLink && resultLink !== '') {
+        const query = new URLSearchParams(
+          keysToSnakeCase({
+            appId: app.id,
+            display: 'popup',
+            href: resultLink,
+          }),
+        );
+        const appLink = `https://www.facebook.com/dialog/share?${query.toString()}`;
+        dispatch(putShareLink({ app, appLink, originalLink: resultLink }));
+      } else {
+        dispatch(putShareLink({ app, originalLink: resultLink }));
+      }
+    }
+  }, [dispatch, selectedApp, resultLink]);
 
   const onChangeInput = (key: keyof BranchAppState) => (
     event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -81,18 +127,21 @@ const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
     handleChangeBranchApp(key, event.currentTarget.value);
   };
 
+  const onChangeApp = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+    const index = parseInt(event.currentTarget.value as string, 10);
+    setSelectedApp(index);
+  };
+
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
     setLoading(true);
     try {
-      const input = { ...branchApp };
-      if (input.resultLink) delete input.resultLink;
       const request = requestApi();
       const response = await request({
         method: 'post',
         url: '/create-app',
-        data: qs.stringify(keysToSnakeCase(input)),
+        data: qs.stringify(keysToSnakeCase(branchApp)),
         headers: {
           'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
           authorization: `Bearer ${session}`,
@@ -174,7 +223,7 @@ const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
           <div className={classes.paddingContent}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <FormControl variant={'outlined'} fullWidth>
+                <FormControl variant={'outlined'} size={'small'} fullWidth>
                   <InputLabel htmlFor={'input-branch-og-title'}>og_title</InputLabel>
                   <OutlinedInput
                     id={'input-branch-og-title'}
@@ -186,7 +235,7 @@ const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <FormControl variant={'outlined'} fullWidth>
+                <FormControl variant={'outlined'} size={'small'} fullWidth>
                   <InputLabel htmlFor={'input-branch-og-image-url'}>og_image_url</InputLabel>
                   <OutlinedInput
                     id={'input-branch-og-image-url'}
@@ -198,7 +247,7 @@ const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <FormControl variant={'outlined'} fullWidth>
+                <FormControl variant={'outlined'} size={'small'} fullWidth>
                   <InputLabel htmlFor={'input-branch-og-description'}>og_description</InputLabel>
                   <OutlinedInput
                     id={'input-branch-og-description'}
@@ -226,14 +275,27 @@ const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
           <Divider />
           <div className={classes.paddingContent}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={4}>
+                <FormControl variant={'filled'} fullWidth>
+                  <NativeSelect
+                    value={selectedApp}
+                    onChange={onChangeApp}
+                    name={'language'}
+                    inputProps={{ 'aria-label': 'Language' }}
+                    classes={{ select: classes.selectInputNative }}
+                  >
+                    {ElementListApp}
+                  </NativeSelect>
+                </FormControl>
+              </Grid>
+              <Grid item xs={8}>
                 <FormControl variant={'filled'} fullWidth>
                   <FilledInput
                     id={'input-result-url'}
                     inputRef={refResultLink}
                     name={'input-result-url-original'}
                     type={'url'}
-                    value={resultLink}
+                    value={shareLink.appLink}
                     margin={'none'}
                     classes={{
                       input: clsx(classes.filledNormalInput, classes.input),

@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { combineReducers } from 'redux';\nimport session from './session';\nimport appConfig from './appConfig';\nimport branchApp from './branchApp';\nvar rootReducer = combineReducers({\n  session: session,\n  appConfig: appConfig,\n  branchApp: branchApp\n});\nexport default rootReducer;","map":null,"metadata":{},"sourceType":"module"}
