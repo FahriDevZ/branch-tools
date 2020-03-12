@@ -88,6 +88,7 @@ const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
   const [selectedApp, setSelectedApp] = React.useState(0);
 
   const refResultLink: React.RefObject<HTMLTextAreaElement> = React.createRef();
+  const refResultLinkPost: React.RefObject<HTMLTextAreaElement> = React.createRef();
   const ElementListApp: any[] = [];
 
   FacebookAppCollections.forEach((item, key) => {
@@ -275,6 +276,48 @@ const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
           <Divider />
           <div className={classes.paddingContent}>
             <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FormControl variant={'filled'} size={'small'} fullWidth>
+                  <FilledInput
+                    id={'input-result-url'}
+                    inputRef={refResultLink}
+                    name={'input-result-url'}
+                    type={'url'}
+                    value={shareLink.originalLink}
+                    margin={'none'}
+                    classes={{
+                      input: clsx(classes.filledNormalInput, classes.input),
+                      adornedEnd: classes.filledNormalAdornedEnd,
+                    }}
+                    autoComplete={'off'}
+                    placeholder={'http://...'}
+                    inputProps={{
+                      'aria-label': 'Post URL',
+                      onClick: () => {
+                        if (refResultLink && refResultLink.current) {
+                          refResultLink.current.select();
+                        }
+                        document.execCommand('copy');
+                      },
+                    }}
+                    endAdornment={
+                      <InputAdornment position={'end'}>
+                        <IconButton
+                          aria-label={'Copy URL'}
+                          onClick={() => {
+                            if (refResultLink && refResultLink.current) {
+                              refResultLink.current.select();
+                            }
+                            document.execCommand('copy');
+                          }}
+                        >
+                          <FileCopyIcon fontSize={'default'} />
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              </Grid>
               <Grid item xs={4}>
                 <FormControl variant={'filled'} fullWidth>
                   <NativeSelect
@@ -291,9 +334,9 @@ const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
               <Grid item xs={8}>
                 <FormControl variant={'filled'} fullWidth>
                   <FilledInput
-                    id={'input-result-url'}
-                    inputRef={refResultLink}
-                    name={'input-result-url-original'}
+                    id={'input-result-url-post'}
+                    inputRef={refResultLinkPost}
+                    name={'input-result-url-post'}
                     type={'url'}
                     value={shareLink.appLink}
                     margin={'none'}
@@ -304,10 +347,10 @@ const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
                     autoComplete={'off'}
                     placeholder={'http://...'}
                     inputProps={{
-                      'aria-label': 'result',
+                      'aria-label': 'Post URL',
                       onClick: () => {
-                        if (refResultLink && refResultLink.current) {
-                          refResultLink.current.select();
+                        if (refResultLinkPost && refResultLinkPost.current) {
+                          refResultLinkPost.current.select();
                         }
                         document.execCommand('copy');
                       },
@@ -317,8 +360,8 @@ const PageIndex: NextPage<PageIndexProp> & PageTheme = ({
                         <IconButton
                           aria-label={'Copy URL'}
                           onClick={() => {
-                            if (refResultLink && refResultLink.current) {
-                              refResultLink.current.select();
+                            if (refResultLinkPost && refResultLinkPost.current) {
+                              refResultLinkPost.current.select();
                             }
                             document.execCommand('copy');
                           }}

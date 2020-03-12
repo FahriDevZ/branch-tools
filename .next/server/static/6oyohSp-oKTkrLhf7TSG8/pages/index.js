@@ -344,6 +344,7 @@ const PageIndex = ({
   const [resultLink, setResultLink] = external_react_default.a.useState(shareLink.originalLink || '');
   const [selectedApp, setSelectedApp] = external_react_default.a.useState(0);
   const refResultLink = external_react_default.a.createRef();
+  const refResultLinkPost = external_react_default.a.createRef();
   const ElementListApp = [];
   FacebookAppCollections.forEach((item, key) => {
     ElementListApp.push(__jsx("option", {
@@ -559,6 +560,50 @@ const PageIndex = ({
     spacing: 2
   }, __jsx(Grid_default.a, {
     item: true,
+    xs: 12
+  }, __jsx(FormControl_default.a, {
+    variant: 'filled',
+    size: 'small',
+    fullWidth: true
+  }, __jsx(FilledInput_default.a, {
+    id: 'input-result-url',
+    inputRef: refResultLink,
+    name: 'input-result-url',
+    type: 'url',
+    value: shareLink.originalLink,
+    margin: 'none',
+    classes: {
+      input: external_clsx_default()(classes.filledNormalInput, classes.input),
+      adornedEnd: classes.filledNormalAdornedEnd
+    },
+    autoComplete: 'off',
+    placeholder: 'http://...',
+    inputProps: {
+      'aria-label': 'Post URL',
+      onClick: () => {
+        if (refResultLink && refResultLink.current) {
+          refResultLink.current.select();
+        }
+
+        document.execCommand('copy');
+      }
+    },
+    endAdornment: __jsx(InputAdornment_default.a, {
+      position: 'end'
+    }, __jsx(IconButton_default.a, {
+      "aria-label": 'Copy URL',
+      onClick: () => {
+        if (refResultLink && refResultLink.current) {
+          refResultLink.current.select();
+        }
+
+        document.execCommand('copy');
+      }
+    }, __jsx(FileCopy_default.a, {
+      fontSize: 'default'
+    })))
+  }))), __jsx(Grid_default.a, {
+    item: true,
     xs: 4
   }, __jsx(FormControl_default.a, {
     variant: 'filled',
@@ -580,9 +625,9 @@ const PageIndex = ({
     variant: 'filled',
     fullWidth: true
   }, __jsx(FilledInput_default.a, {
-    id: 'input-result-url',
-    inputRef: refResultLink,
-    name: 'input-result-url-original',
+    id: 'input-result-url-post',
+    inputRef: refResultLinkPost,
+    name: 'input-result-url-post',
     type: 'url',
     value: shareLink.appLink,
     margin: 'none',
@@ -593,10 +638,10 @@ const PageIndex = ({
     autoComplete: 'off',
     placeholder: 'http://...',
     inputProps: {
-      'aria-label': 'result',
+      'aria-label': 'Post URL',
       onClick: () => {
-        if (refResultLink && refResultLink.current) {
-          refResultLink.current.select();
+        if (refResultLinkPost && refResultLinkPost.current) {
+          refResultLinkPost.current.select();
         }
 
         document.execCommand('copy');
@@ -607,8 +652,8 @@ const PageIndex = ({
     }, __jsx(IconButton_default.a, {
       "aria-label": 'Copy URL',
       onClick: () => {
-        if (refResultLink && refResultLink.current) {
-          refResultLink.current.select();
+        if (refResultLinkPost && refResultLinkPost.current) {
+          refResultLinkPost.current.select();
         }
 
         document.execCommand('copy');
